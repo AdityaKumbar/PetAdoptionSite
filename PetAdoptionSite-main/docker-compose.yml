@@ -1,0 +1,11 @@
+version: '3'
+services:
+  petadoption-backend:
+    image: petadoption-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb+srv://petuser:petpassword123@pet-adoption.ng0fa6p.mongodb.net/?retryWrites=true&w=majority&appName=pet-adoption
+      - JWT_SECRET=your_jwt_secret_here
+    # ...other config...
