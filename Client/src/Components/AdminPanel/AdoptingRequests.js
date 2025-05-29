@@ -11,7 +11,7 @@ const AdoptingRequests = () => {
 
   const fetchForms = async () => {
     try {
-      const response = await fetch('http://localhost:5000/form/getForms');
+      const response = await fetch('http://localhost:5001/form/getForms');
       if (!response.ok) {
         throw new Error('An error occurred');
       }
@@ -26,7 +26,7 @@ const AdoptingRequests = () => {
 
   const fetchPets = async () => {
     try {
-      const response = await fetch('http://localhost:5000/approvedPets');
+      const response = await fetch('http://localhost:5001/pets');
       if (!response.ok) {
         throw new Error('An error occurred');
       }

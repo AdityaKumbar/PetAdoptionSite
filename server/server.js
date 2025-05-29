@@ -15,7 +15,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(petRouter);
+app.use(petRouter); // Register all pet routes at root
 app.use('/form', AdoptFormRoute);
 app.use('/admin', AdminRoute);
 app.use('/auth', authRouter);
@@ -31,7 +31,7 @@ mongoose.connect(uri, {
 })
 .then(() => {
     console.log('Connected to DB');
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 5001;
     app.listen(PORT, () => {
         console.log(`Listening on port ${PORT}`);
     });

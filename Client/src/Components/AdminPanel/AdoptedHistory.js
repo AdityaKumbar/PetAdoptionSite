@@ -7,7 +7,7 @@ const AdoptedHistory = () => {
 
   const fetchAdoptedPets = async () => {
     try {
-      const response = await fetch('http://localhost:5000/adoptedPets');
+      const response = await fetch('http://localhost:5001/adoptedPets');
       if (!response.ok) {
         throw new Error('An error occurred while fetching adopted pets');
       }

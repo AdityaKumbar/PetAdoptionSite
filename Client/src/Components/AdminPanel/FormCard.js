@@ -43,7 +43,7 @@ const FormCard = (props) => {
   
   const deleteFormAdoptedPet = async () => {
     try {
-      const deleteResponse = await fetch(`http://localhost:5000/form/delete/many/${props.form.petId}`, {
+      const deleteResponse = await fetch(`http://localhost:5001/form/delete/many/${props.form.petId}`, {
         method: 'DELETE'
       });
       if (!deleteResponse.ok) {
@@ -59,7 +59,7 @@ const FormCard = (props) => {
   const handleReject = async () => {
     setIsDeleting(true)
     try {
-      const response = await fetch(`http://localhost:5000/form/reject/${props.form._id}`, {
+      const response = await fetch(`http://localhost:5001/form/reject/${props.form._id}`, {
         method: 'DELETE'
       })
 

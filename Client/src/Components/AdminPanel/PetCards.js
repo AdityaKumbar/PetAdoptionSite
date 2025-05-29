@@ -26,7 +26,7 @@ const PetCards = (props) => {
   const handleApprove = async () => {
     setIsApproving(true);
     try {
-      const response = await fetch(`http://localhost:5000/approving/${props.pet._id}`, {
+      const response = await fetch(`http://localhost:5001/approving/${props.pet._id}`, {
         method: 'PUT',
         body: JSON.stringify({
           status: "Approved"
@@ -51,7 +51,7 @@ const PetCards = (props) => {
   const deleteFormsAdoptedPet = async () => {
     setIsDeleting(true)
     try {
-      const deleteResponses = await fetch(`http://localhost:5000/form/delete/many/${props.pet._id}`, {
+      const deleteResponses = await fetch(`http://localhost:5001/form/delete/many/${props.pet._id}`, {
         method: 'DELETE'
       });
       if (!deleteResponses.ok) {
@@ -65,7 +65,7 @@ const PetCards = (props) => {
 
   const handleReject = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/delete/${props.pet._id}`, {
+      const response = await fetch(`http://localhost:5001/delete/${props.pet._id}`, {
         method: 'DELETE'
       })
 

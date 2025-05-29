@@ -7,7 +7,7 @@ const PostingPets = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await fetch('http://localhost:5000/requests')
+      const response = await fetch('http://localhost:5001/requests')
       if (!response.ok) {
         throw new Error('An error occurred')
       }
