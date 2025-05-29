@@ -8,4 +8,12 @@ services:
       - PORT=5001
       - MONGO_URI=mongodb+srv://petuser:petpassword123@pet-adoption.ng0fa6p.mongodb.net/?retryWrites=true&w=majority&appName=pet-adoption
       - JWT_SECRET=your_jwt_secret_here
-    # ...other config...
+
+  petadoption-frontend:
+    build: ./Client
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://petadoption-backend:5001
+    depends_on:
+      - petadoption-backend
