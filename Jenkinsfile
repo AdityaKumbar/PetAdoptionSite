@@ -12,7 +12,12 @@ pipeline {
                 sh 'docker build -t petadoption-backend ./server'
             }
         }
-        stage('Start Backend Container') {
+        stage('Build Frontend Docker Image') {
+            steps {
+                sh 'docker build -t petadoption-frontend ./Client'
+            }
+        }
+        stage('Start Containers') {
             steps {
                 sh 'docker-compose up -d'
             }
