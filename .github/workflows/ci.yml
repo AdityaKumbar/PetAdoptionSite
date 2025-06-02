@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:6
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install backend dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Install frontend dependencies
+        working-directory: ./Client
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./Client
+        run: npm run build
+
+      # Uncomment if you have backend build scripts
+      # - name: Build backend
+      #   working-directory: ./server
+      #   run: npm run build
+
+      - name: Run frontend tests
+        working-directory: ./Client
+        run: npm test -- --watchAll=false
+
+      # Uncomment if you have backend tests
+      # - name: Run backend tests
+      #   working-directory: ./server
+      #   run: npm test
+
+      # Optionally build Docker images
+      - name: Build backend Docker image
+        run: docker build -t petadoption-backend ./server
+
+      - name: Build frontend Docker image
+        run: docker build -t petadoption-frontend ./Client
