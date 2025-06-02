@@ -18,8 +18,8 @@ jobs:
         options: >-
           --health-cmd "mongo --host localhost --eval 'db.runCommand({ ping: 1 })'"
           --health-interval 30s
-          --health-timeout 10s
-          --health-retries 10
+          --health-timeout 20s
+          --health-retries 15
 
     steps:
       - name: Checkout code
@@ -46,6 +46,17 @@ jobs:
       # - name: Build backend
       #   working-directory: ./server
       #   run: npm run build
+
+      - name: Wait for MongoDB
+        run: |
+          for i in {1..30}; do
+            if mongo --host localhost --eval "db.runCommand({ ping: 1 })"; then
+              echo "MongoDB is ready"
+              break
+            fi
+            echo "Waiting for MongoDB to be ready..."
+            sleep 10
+          done
 
       - name: Run frontend tests
         working-directory: ./Client
