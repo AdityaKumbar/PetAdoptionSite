@@ -1,11 +1,3 @@
-name: CI
-
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -16,10 +8,10 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" 
-          --health-interval 10s 
-          --health-timeout 5s 
-          --health-retries 5
+          --health-cmd "mongo --host localhost --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 10
 
     steps:
       - name: Checkout code
