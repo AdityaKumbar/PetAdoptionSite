@@ -18,7 +18,7 @@ const HomeLandingContainer = (props) => {
             </div>
             Are Our
             <br />
-            Priority
+            Priority...
           </p>
           <p className="home-second-para">
             {props.description}
