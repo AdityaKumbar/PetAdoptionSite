@@ -1,199 +1,153 @@
 import React, { useState } from "react";
 
-function AdoptForm(props) {
+const AddPetSection = ({ onPetAdded }) => {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [area, setArea] = useState("");
+  const [justification, setJustification] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNo, setPhoneNo] = useState("");
-  const [livingSituation, setLivingSituation] = useState("");
-  const [previousExperience, setPreviousExperience] = useState("");
-  const [familyComposition, setFamilyComposition] = useState("");
-  const [formError, setFormError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [ErrPopup, setErrPopup] = useState(false);
-  const [SuccPopup, setSuccPopup] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [type, setType] = useState("Dog");
+  const [picture, setPicture] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const isEmailValid = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._-]+@gmail\.com$/;
-    return emailPattern.test(email);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setPicture(selectedFile);
+      setFileName(selectedFile.name);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setEmailError(false);
+    setError("");
+    setSuccess("");
 
-    if (
-      !email ||
-      !phoneNo ||
-      !livingSituation ||
-      !previousExperience ||
-      !familyComposition
-    ) {
-      setFormError(true);
+    // Validate fields
+    if (!name || !age || !area || !justification || !email || !phone || !fileName) {
+      setError("Please fill out all fields.");
       return;
     }
 
-    if (!isEmailValid(email)) {
-      setEmailError(true);
-      return;
-    }
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("age", age);
+    formData.append("area", area);
+    formData.append("justification", justification);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("type", type);
+    formData.append("picture", picture);
 
     try {
-
-      setIsSubmitting(true)
-
-      const response = await fetch('http://localhost:5000/form/save', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          phoneNo,
-          livingSituation,
-          previousExperience,
-          familyComposition,
-          petId: props.pet._id
-        })
-      })
+      const response = await fetch("http://localhost:5001/approvedPets", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
-        setErrPopup(true)
-        return;
-      } else {
-        setSuccPopup(true)
+        throw new Error("Failed to add pet.");
       }
-    }
-    catch (err) {
-      setErrPopup(true)
-      console.error(err);
-      return;
-    } finally {
-      setIsSubmitting(false)
 
-    }
+      setSuccess("Pet added successfully!");
+      setName("");
+      setAge("");
+      setArea("");
+      setJustification("");
+      setEmail("");
+      setPhone("");
+      setType("Dog");
+      setPicture(null);
+      setFileName("");
 
-    setEmailError(false);
-    setFormError(false);
-    setEmail("");
-    setPhoneNo("");
-    setLivingSituation("");
-    setPreviousExperience("");
-    setFamilyComposition("");
+      if (onPetAdded) onPetAdded();
+    } catch (err) {
+      setError("Error adding pet.");
+    }
   };
 
   return (
-    <div className="custom-adopt-form-container">
-      <h2 className="custom-form-heading">Pet Adoption Application</h2>
-      <div className="form-pet-container">
-        <div className="pet-details">
-          <div className="pet-pic">
-            <img src={`http://localhost:5000/images/${props.pet.filename}`} alt={props.pet.name} />
-          </div>
-          <div className="pet-info">
-            <h2>{props.pet.name}</h2>
-            <p>
-              <b>Type:</b> {props.pet.type}
-            </p>
-            <p>
-              <b>Age:</b> {props.pet.age}
-            </p>
-            <p>
-              <b>Location:</b> {props.pet.location}
-            </p>
-          </div>
+    <div className="add-pet-section">
+      <h2>Add a Pet</h2>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <div className="input-box">
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter pet's name"
+          />
         </div>
-        <div className="form-div">
-          <form onSubmit={handleSubmit} className="custom-form">
-            <div className="custom-input-box">
-              <div className="email-not-valid">
-                <label className="custom-label">Email:</label>
-                {emailError && (
-                  <p>
-                    Please provide valid email address.
-                  </p>
-                )}
-              </div>
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="custom-input"
-              />
-            </div>
-            <div className="custom-input-box">
-              <label className="custom-label">Phone No.</label>
-              <input
-                type="text"
-                value={phoneNo}
-                onChange={(e) => setPhoneNo(e.target.value)}
-                className="custom-input"
-              />
-            </div>
-            <div className="custom-input-box">
-              <label className="custom-label">Pet Living Situation:</label>
-              <input
-                type="text"
-                value={livingSituation}
-                onChange={(e) => setLivingSituation(e.target.value)}
-                className="custom-input"
-              />
-            </div>
-            <div className="custom-input-box">
-              <label className="custom-label">Previous Pet Experience:</label>
-              <input
-                type="text"
-                value={previousExperience}
-                onChange={(e) => setPreviousExperience(e.target.value)}
-                className="custom-input"
-              />
-            </div>
-            <div className="custom-input-box">
-              <label className="custom-label">Any Other Pets:</label>
-              <input
-                type="text"
-                value={familyComposition}
-                onChange={(e) => setFamilyComposition(e.target.value)}
-                className="custom-input"
-              />
-            </div>
-            {formError && (
-              <p className="error-message">Please fill out all fields.</p>
-            )}
-            <button disabled={isSubmitting} type="submit" className="custom-cta-button custom-m-b">
-              {isSubmitting ? 'Submitting' : 'Submit'}
-            </button>
-            {ErrPopup && (
-              <div className="popup">
-                <div className="popup-content">
-                  <h4>
-                    Oops!... Connection Error.
-                  </h4>
-                </div>
-                <button onClick={(e) => (setErrPopup(!ErrPopup))} className="close-btn">
-                  Close <i className="fa fa-times"></i>
-                </button>
-              </div>
-            )}
-            {SuccPopup && (
-              <div className="popup">
-                <div className="popup-content">
-                  <h4>
-                    Adoption Form of {props.pet.name} is Submitted; we'll get in touch with you soon for further process.
-                  </h4>
-                </div>
-                <button onClick={(e) => {
-                  setSuccPopup(!SuccPopup);
-                  props.closeForm();
-                }} className="close-btn">
-                  Close <i className="fa fa-times"></i>
-                </button>
-              </div>
-            )}
-          </form>
+        <div className="input-box">
+          <label>Age:</label>
+          <input
+            type="text"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            placeholder="Enter pet's age"
+          />
         </div>
-      </div>
+        <div className="input-box">
+          <label>Type:</label>
+          <select value={type} onChange={(e) => setType(e.target.value)}>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Rabbit">Rabbit</option>
+            <option value="Bird">Bird</option>
+            <option value="Fish">Fish</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div className="input-box">
+          <label>Picture:</label>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          {fileName && <p>Selected file: {fileName}</p>}
+        </div>
+        <div className="input-box">
+          <label>Location:</label>
+          <input
+            type="text"
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+            placeholder="Enter location"
+          />
+        </div>
+        <div className="input-box">
+          <label>Justification:</label>
+          <textarea
+            value={justification}
+            onChange={(e) => setJustification(e.target.value)}
+            placeholder="Why are you giving this pet?"
+          ></textarea>
+        </div>
+        <div className="input-box">
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+        </div>
+        <div className="input-box">
+          <label>Phone:</label>
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Enter your phone number"
+          />
+        </div>
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+        <button type="submit">Add Pet</button>
+      </form>
     </div>
   );
-}
+};
 
-export default AdoptForm;
+export default AddPetSection;

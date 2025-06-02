@@ -11,7 +11,6 @@ const petSchema = new mongoose.Schema({
   picture: String,
 });
 
-// Use `mongoose.models` to prevent overwriting the model
-const Pet = mongoose.models.Pet || mongoose.model('Pet', petSchema);
+const Pet = mongoose.model('Pet', petSchema);
 
 module.exports = Pet;
