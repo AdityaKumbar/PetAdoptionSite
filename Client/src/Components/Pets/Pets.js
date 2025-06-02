@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const Pets = () => {
+  // Local state for pets
   const [petsData, setPetsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Add Pet Section state
   const [name, setName] = useState("");
   const [type, setType] = useState("Dog");
   const [age, setAge] = useState("");
@@ -17,25 +15,6 @@ const Pets = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const fetchPets = async () => {
-  setLoading(true);
-  try {
-    const response = await fetch("http://localhost:5001/pets");
-    const data = await response.json();
-    console.log('Fetched Pets:', data); // Log the fetched pets
-    setPetsData(data);
-  } catch (error) {
-    console.error('Error fetching pets:', error);
-    setPetsData([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
-  useEffect(() => {
-    fetchPets();
-  }, []);
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -44,51 +23,52 @@ const Pets = () => {
     }
   };
 
-  const handleAddPet = async (e) => {
+  const handleAddPet = (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!name || !type || !age || !area || !justification || !email || !phone || !fileName) {
+    if (!name || !type || !age || !area || !justification || !email || !phone) {
       setError("Please fill out all fields.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("type", type);
-    formData.append("age", age);
-    formData.append("area", area);
-    formData.append("justification", justification);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("picture", picture);
-
-    try {
-      const response = await fetch("http://localhost:5001/pets", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add pet.");
-      }
-
-      setSuccess("Pet added successfully!");
-      setName("");
-      setType("Dog");
-      setAge("");
-      setArea("");
-      setJustification("");
-      setEmail("");
-      setPhone("");
-      setPicture(null);
-      setFileName("");
-      fetchPets();
-    } catch (err) {
-      console.error("Error adding pet:", err);
-      setError("Error adding pet.");
+    // Convert image to base64 for preview
+    let pictureUrl = "";
+    if (picture) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        pictureUrl = reader.result;
+        addPetToList(pictureUrl);
+      };
+      reader.readAsDataURL(picture);
+    } else {
+      addPetToList("");
     }
+  };
+
+  const addPetToList = (pictureUrl) => {
+    const newPet = {
+      name,
+      type,
+      age,
+      area,
+      justification,
+      email,
+      phone,
+      picture: pictureUrl,
+    };
+    setPetsData([newPet, ...petsData]);
+    setSuccess("Pet added successfully!");
+    setName("");
+    setType("Dog");
+    setAge("");
+    setArea("");
+    setJustification("");
+    setEmail("");
+    setPhone("");
+    setPicture(null);
+    setFileName("");
   };
 
   return (
@@ -270,9 +250,7 @@ const Pets = () => {
       </form>
 
       <div className="pet-container" style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
-        {loading ? (
-          <p>Loading...</p>
-        ) : petsData.length > 0 ? (
+        {petsData.length > 0 ? (
           petsData.map((pet, idx) => (
             <div
               key={idx}
@@ -292,7 +270,7 @@ const Pets = () => {
             >
               {pet.picture && (
                 <img
-                  src={`http://localhost:5001/images/${pet.picture}`}
+                  src={pet.picture}
                   alt={pet.name}
                   style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 8, marginBottom: 10 }}
                 />
