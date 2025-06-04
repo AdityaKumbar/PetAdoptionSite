@@ -1,10 +1,13 @@
-FROM node:18
+FROM node:18 AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm config set registry https://registry.npmjs.org/
-RUN npm ci --no-optional --legacy-peer-deps
+RUN npm install
 COPY . .
-EXPOSE 3000
-ENV HOST=0.0.0.0
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/ || exit 1
-CMD ["npm", "start"]
+RUN npm run build
+
+FROM node:18-slim
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=build /app/build ./build
+EXPOSE 80
+CMD ["serve", "-s", "build", "-l", "80"]
