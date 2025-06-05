@@ -14,7 +14,7 @@ const App = () => (
           path="/"
           element={
             <Home
-              description="Ensure you are fully PREPARED to provide proper care and attention to your pet before welcoming them into your home."
+              description="Ensure you are fully prepared to provide proper care and attention to your pet before welcoming them into your home."
             />
           }
         />
