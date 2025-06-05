@@ -6,19 +6,22 @@ import Pets from "./Components/Pets/Pets";
 import "./App.css";
 
 const App = () => (
-  <Router>
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Home
-            description="Ensure you are fully PREPARED to provide proper care and attention to your pet before welcoming them into your home."
-          />
-        }
-      />
-      <Route path="/pets" element={<Pets />} />
-    </Routes>
-  </Router>
+  <>
+    <h1 className="happy-tails-title">Happy Tails</h1>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              description="Ensure you are fully PREPARED to provide proper care and attention to your pet before welcoming them into your home."
+            />
+          }
+        />
+        <Route path="/pets" element={<Pets />} />
+      </Routes>
+    </Router>
+  </>
 );
 
 export default App;

@@ -1607,3 +1607,21 @@ body {
     font-size: 1rem;
     margin-bottom: 10px;
 }
+
+.happy-tails-title {
+  text-align: center;
+  margin: 40px 0 32px 0;
+  font-family: 'Preahvihear', sans-serif;
+  font-weight: 900;
+  font-size: 3.5rem;
+  letter-spacing: 3px;
+  color: #ff6f61;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 0 #fff;
+  background: linear-gradient(90deg, #ffe0c3 0%, #ffb6b9 100%);
+  border-radius: 18px;
+  padding: 18px 0 14px 0;
+  box-shadow: 0 4px 24px rgba(255, 111, 97, 0.08);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
