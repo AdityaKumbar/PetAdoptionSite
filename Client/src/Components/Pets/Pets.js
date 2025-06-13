@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Pets = () => {
-  // Local state for pets
-  const [petsData, setPetsData] = useState([]);
+  // Load pets from localStorage on mount
+  const [petsData, setPetsData] = useState(() => {
+    const savedPets = localStorage.getItem("pets");
+    return savedPets ? JSON.parse(savedPets) : [];
+  });
   const [name, setName] = useState("");
   const [type, setType] = useState("Dog");
   const [age, setAge] = useState("");
@@ -14,6 +17,11 @@ const Pets = () => {
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // Save pets to localStorage whenever petsData changes
+  useEffect(() => {
+    localStorage.setItem("pets", JSON.stringify(petsData));
+  }, [petsData]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
