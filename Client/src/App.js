@@ -7,7 +7,7 @@ import "./App.css";
 
 const App = () => (
   <>
-    <h1 className="happy-tails-title">Paw Finds</h1>
+    <h1 className="happy-tails-title">Happy Tails</h1>
     <Router>
       <Routes>
         <Route
